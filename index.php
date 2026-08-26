@@ -1,0 +1,69 @@
+<?php
+  session_start();
+  include("db.php");
+
+  $sql = "SELECT * FROM users";
+  $query = mysqli_query($conn, $sql);
+
+  if(isset($_SESSION["err_msg"])){
+    $err_msg = $_SESSION["err_msg"];
+    unset($_SESSION["err_msg"]);
+  }
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="wrapper_heading">
+      <h1>User List</h1>
+      <a href="add.php" class="btn btn-add">Add User</a>
+    </div>
+
+    <?php if(!empty($err_msg)): ?>
+      <p class="err-display"><?= htmlspecialchars($err_msg) ?></p>
+    <?php endif; ?>
+
+    <div class="table-wrapper">
+      <table class="table-contents">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+            $num = 1;
+            while($row = mysqli_fetch_assoc($query)):
+          ?>
+            <tr>
+              <td><?= $num++ ?></td>
+              <td><?= htmlspecialchars($row["username"]) ?></td>
+              <td><?= htmlspecialchars($row["email"]) ?></td>
+              <td><?= htmlspecialchars($row["phone"]) ?></td>
+              <td><?= htmlspecialchars($row["address"]) ?></td>
+              <td class="action-wrapper">
+                <a href="edit.php?id=<?= $row['user_id'] ?>" class="btn btn-edit">Edit</a>
+                <form action="actions.php?id=<?= $row['user_id'] ?>" method="post" onsubmit="return confirm('Delete this user?')">
+                  <button type="submit" name="btn-delete" class="btn btn-delete">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <?php endwhile; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
