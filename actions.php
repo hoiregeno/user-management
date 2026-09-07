@@ -55,18 +55,20 @@
     $username = trim($_POST["username"] ?? "");
     $email = trim($_POST["email"] ?? "");
     $phone = trim($_POST["phone"] ?? "");
+    $role = trim($_POST["role"] ?? "");
     $address = trim($_POST["address"] ?? "");
 
-    if($username !== "" && $email !== "" && $phone !== "" && $address !== ""){
+    if($username !== "" && $email !== "" && $phone !== "" && $address !== "" && $role !== ""){
       try{
         $sql = "UPDATE users
                 SET username = ?,
                     email = ?,
                     phone = ?,
-                    address = ?
+                    address = ?,
+                    role = ?
                 WHERE user_id = ?";
         $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "ssssi", $username, $email, $phone, $address, $user_id);
+        mysqli_stmt_bind_param($stmt, "sssssi", $username, $email, $phone, $address, $role, $user_id);
         mysqli_stmt_execute($stmt);
 
         header("Location: index.php");
