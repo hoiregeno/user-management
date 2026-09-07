@@ -24,7 +24,6 @@
   <?php endif; ?>
 
   <div class="form-wrapper">
-
     <form action="actions.php" method="post">
       <h2>Add User</h2>
       
@@ -46,6 +45,11 @@
       <div class="input-wrapper">
         <textarea name="address" id="address" placeholder=" "><?= htmlspecialchars($old['address'] ?? '') ?></textarea>
         <label for="address">Address</label>
+      </div>
+
+      <div class="input-wrapper">
+        <input type="text" name="role" id="role" placeholder=" " value="<?= htmlspecialchars($old['role'] ?? '') ?>">
+        <label for="role">Role</label>
       </div>
 
       <div class="action-wrapper">

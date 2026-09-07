@@ -2,19 +2,77 @@
   session_start();
   include("db.php");
 
+  // --- LOGIN USER ---
+  if(isset($_POST["btn-login"])){
+    // Grab user details
+    $username = trim($_POST["username"] ?? "");
+    $password = trim($_POST["password"] ?? "");
+
+    if($username === "" || $password === ""){
+      $_SESSION["err_msg"] = "Please fill in all fields.";
+      header("Location: login.php");
+      exit;
+    }
+
+    try{
+      $sql = "SELECT user_id, username, hash_password, role
+              FROM users
+              WHERE username = ?";
+      $stmt = mysqli_prepare($conn, $sql);
+      mysqli_stmt_bind_param($stmt, "s", $username);
+      mysqli_stmt_execute($stmt);
+
+      $result = mysqli_stmt_get_result($stmt);
+
+      if(mysqli_num_rows($result) === 0){
+        $_SESSION["err_msg"] = "Wrong username or password.";
+        header("Location: login.php");
+        exit;
+      }
+
+      $row = mysqli_fetch_assoc($result);
+      if(password_verify($password, $row["hash_password"])){
+        $_SESSION["user_id"] = $row["user_id"];
+        $_SESSION["username"] = $row["username"];
+
+        if($row["role"] === "user"){
+          header("Location: user_dashboard.php");
+          exit;
+        }
+        else{
+          header("Location: index.php");
+          exit;
+        }
+      }
+      else{
+        $_SESSION["err_msg"] = "Wrong username or password.";
+        header("Location: login.php");
+        exit;
+      }
+    }
+    catch(mysqli_sql_exception $e){
+      $_SESSION["err_msg"] = "Something went wrong.";
+      error_log($e ->  getMessage());
+
+      header("Location: login.php");
+      exit;
+    }
+  }
+
   // --- ADD USER ---
   if(isset($_POST["btn-add"])){
     $username = trim($_POST["username"] ?? "");
     $email = trim($_POST["email"] ?? "");
     $phone = trim($_POST["phone"] ?? "");
     $address = trim($_POST["address"] ?? "");
+    $role = trim($_POST["role"] ?? "");
 
-    if($username !== "" && $email !== "" && $phone !== "" && $address !== ""){
+    if($username !== "" && $email !== "" && $phone !== "" && $address !== "" && $role !== ""){
       try{
-        $sql = "INSERT INTO users (username, email, phone, address)
-                VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO users (username, email, phone, address, role)
+                VALUES (?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "ssss", $username, $email, $phone, $address);
+        mysqli_stmt_bind_param($stmt, "sssss", $username, $email, $phone, $address, $role);
         mysqli_stmt_execute($stmt);
 
         header("Location: index.php");
