@@ -2,7 +2,12 @@
   session_start();
   include("db.php");
 
-  $sql = "SELECT * FROM users";
+  if(!isset($_SESSION["user_id"])){
+    header("Location: login.php");
+    exit;
+  }
+
+  $sql = "SELECT user_id, username, email, phone, address, role FROM users";
   $query = mysqli_query($conn, $sql);
 
   if(isset($_SESSION["err_msg"])){
@@ -39,6 +44,7 @@
             <th>Email</th>
             <th>Phone</th>
             <th>Address</th>
+            <th>Role</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -53,6 +59,7 @@
               <td><?= htmlspecialchars($row["email"]) ?></td>
               <td><?= htmlspecialchars($row["phone"]) ?></td>
               <td><?= htmlspecialchars($row["address"]) ?></td>
+              <td><?= htmlspecialchars($row["role"]) ?></td>
               <td class="action-wrapper">
                 <a href="edit.php?id=<?= $row['user_id'] ?>" class="btn btn-edit">Edit</a>
                 <form action="actions.php?id=<?= $row['user_id'] ?>" method="post" onsubmit="return confirm('Delete this user?')">
@@ -63,6 +70,10 @@
           <?php endwhile; ?>
         </tbody>
       </table>
+    </div>
+
+    <div class="action-wrapper logout">
+      <a href="logout.php" class="btn btn-logout">Logout</a>
     </div>
   </div>
 </body>
