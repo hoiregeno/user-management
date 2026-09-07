@@ -291,6 +291,12 @@ textarea {
   color: var(--color-text);
 }
 
+.action-wrapper.logout {
+  margin-top: var(--space-lg);
+  display: flex;
+  justify-content: flex-start;
+}
+
 /* ERROR MESSAGE ANIMATION */
 @keyframes slideDown {
   from {
