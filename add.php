@@ -47,11 +47,6 @@
         <label for="address">Address</label>
       </div>
 
-      <div class="input-wrapper">
-        <input type="text" name="role" id="role" placeholder=" " value="<?= htmlspecialchars($old['role'] ?? '') ?>">
-        <label for="role">Role</label>
-      </div>
-
       <div class="action-wrapper">
         <button type="submit" class="btn btn-submit" name="btn-add">Add</button>
         <a href="index.php" class="btn btn-cancel">Cancel</a>
