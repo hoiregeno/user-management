@@ -7,7 +7,13 @@
     exit;
   }
 
-  $sql = "SELECT user_id, username, email, phone, address, role FROM users";
+  $sql = "SELECT  user_id,
+                  username,
+                  email,
+                  phone,
+                  address,
+                  role
+          FROM users";
   $query = mysqli_query($conn, $sql);
 
   if(isset($_SESSION["err_msg"])){
