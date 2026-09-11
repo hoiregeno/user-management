@@ -2,11 +2,13 @@
   session_start();
   include("db.php");
 
+  // Validate if user logged in first
   if(!isset($_SESSION["user_id"])){
     header("Location: login.php");
     exit;
   }
 
+  // Select necessary user details
   $sql = "SELECT  user_id,
                   username,
                   email,
@@ -14,7 +16,8 @@
                   address,
                   role
           FROM users";
-  $query = mysqli_query($conn, $sql);
+
+  $result = mysqli_query($conn, $sql);
 
   if(isset($_SESSION["err_msg"])){
     $err_msg = $_SESSION["err_msg"];
@@ -57,7 +60,7 @@
         <tbody>
           <?php
             $num = 1;
-            while($row = mysqli_fetch_assoc($query)):
+            while($row = mysqli_fetch_assoc($result)):
           ?>
             <tr>
               <td><?= $num++ ?></td>
